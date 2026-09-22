@@ -27,7 +27,7 @@ jobs:
           mkdir project
           unzip -o "Muzammil_Online_Service_GitHub_APK_Project_FIXED.zip" -d project
 
-      - name: Find Android project
+      - name: Find Gradle project
         run: |
           SETTINGS=$(find project -type f \( \
             -name "settings.gradle" \
@@ -36,16 +36,13 @@ jobs:
 
           if [ -z "$SETTINGS" ]; then
             echo "ERROR: Gradle settings file not found"
-            find project -maxdepth 5 -type f
+            find project -maxdepth 6 -type f
             exit 1
           fi
 
           PROJECT_DIR=$(dirname "$SETTINGS")
-
-          echo "Android project:"
-          echo "$PROJECT_DIR"
-
           echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
+          echo "Android project found: $PROJECT_DIR"
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -67,7 +64,6 @@ jobs:
 
       - name: Find APK
         run: |
-          echo "APK files:"
           find project -type f -name "*.apk" -print
 
       - name: Upload APK
